@@ -1,0 +1,83 @@
+{{form.value | json}}
+<form [formGroup]="form">
+  <div id="p-grid">
+
+    <app-input-field label="Nome:">
+      <input class="p-col-12 p-md-5 p-lg-5" type="text" pInputText formControlName="firstname" name="firstname" id="firstname">
+    </app-input-field>
+
+    <app-input-field label="Sobrenome:">
+      <input class="p-col-12 p-md-5 p-lg-5" type="text" pInputText formControlName="lastname" name="lastname" id="lastname">
+    </app-input-field>
+
+    <app-input-field label="Email:">
+      <input class="p-col-12 p-md-5 p-lg-5" type="email" pInputText formControlName="email" name="email" id="email">
+    </app-input-field>
+
+    <app-input-field label="NIS (PIS):">
+      <input class="p-col-12 p-md-5 p-lg-5" type="text" pInputText formControlName="pis" name="pis" id="pis">
+    </app-input-field>
+
+  </div>
+  <ng-container *ngIf="editing; else make">
+    <p-button
+      label="Alterar"
+      [disabled]="form.invalid"
+      icon="pi pi-edit"
+      iconPos="left"create
+      (onClick)="update()">
+    </p-button>
+  </ng-container>
+
+  <ng-template #make>
+    <p-button
+      label="Cadastrar"
+      [disabled]="form.invalid"
+      icon="pi pi-check"
+      iconPos="left"
+      (onClick)="create()" >
+    </p-button>
+  </ng-template>
+
+  <p-button
+    styleClass="ui-button-warning"
+    label="Reset"
+    icon="pi pi-cancel"
+    iconPos="left"
+    (onClick)="resetForm()">
+  </p-button>
+
+  </form>
+
+<p-messages [(value)]="msg"></p-messages>
+
+<table *ngIf="employers.length">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Sobrenome</th>
+      <th>Email</th>
+      <th>Pis</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of employers; trackBy:emp">
+      <td>{{emp.firstname}}</td>
+      <td>{{emp.lastname}}</td>
+      <td>{{emp.email}}</td>
+      <td>{{emp.pis}}</td>
+      <td><button pButton type="button" class="ui-button-info" label="Ver" [routerLink]="['/employer', emp.id]"></button></td>
+      <td><button pButton type="button" class="ui-button-success" label="Editar" (click)="edit(emp)" ></button></td>
+      <td><button pButton type="button" class="ui-button-danger" label="Excluir" (click)="showDialogDelete(emp.id)" ></button></td>
+    </tr>
+  </tbody>
+</table>
+
+<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle">
+    <p-footer>
+        <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
+

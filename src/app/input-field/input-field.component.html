@@ -1,0 +1,14 @@
+<div class="p-grid p-col-12 p-md-12 p-lg-6">
+  <label class="p-col-12 p-md-2 p-lg-2" [for]="label">{{label}}</label>
+    <ng-content></ng-content>
+    <ng-container *ngIf="input">
+      <div *ngIf="input.invalid && (input?.dirty || input?.touched)"
+        class="p-col-12 p-md-5 p-lg-5">
+        <span *ngIf="input.errors.required">Campo obrigatório</span>
+        <span *ngIf="input.errors.minlength" >Mínimo {{input.errors.minlength.requiredLength}} caracteres requeridos</span>
+        <span *ngIf="input.errors.maxlength">Máximo {{input.errors.maxlength.requiredLength}} caracteres requeridos</span>
+        <span *ngIf="input.errors.email">Email inválido</span>
+        <span *ngIf="input.errors.pattern">Somente números</span>
+      </div>
+    </ng-container>
+</div>
