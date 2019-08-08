@@ -5,11 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessagesModule } from 'primeng/messages';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {ConfirmationService} from 'primeng/api';
 
 import { AboutComponent } from './about/about.component';
 import { AppComponent } from './app.component';

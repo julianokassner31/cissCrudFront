@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ContentChild, AfterContentInit } from '@angular/core';
 import { FormControlName } from '@angular/forms';
+import { Component, OnInit, Input, ContentChild, AfterContentInit } from '@angular/core';
 
 @Component({
   selector: 'app-input-field',
@@ -9,7 +9,7 @@ import { FormControlName } from '@angular/forms';
 export class InputFieldComponent implements OnInit, AfterContentInit {
 
   @Input() label: string;
-  @ContentChild(FormControlName) formControl: FormControlName;
+  @ContentChild(FormControlName,  {static: false}) formControl: FormControlName;
   input: any;
 
   constructor() { }

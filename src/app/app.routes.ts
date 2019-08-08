@@ -22,6 +22,6 @@ export const routes: Routes = [
 
   {
     path: 'employer',
-    loadChildren: './employer/employer.module#EmployerModule'
+    loadChildren: () => import('./employer/employer.module').then(m => m.EmployerModule)
   }
 ];
