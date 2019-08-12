@@ -1,25 +1,30 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import * as _ from 'lodash';
+import { MessageService } from 'primeng/api';
+
+import { Util } from '../util/util';
 import { Employer } from './../model/Employer';
 import { EmployerService } from './../services/employer.service';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-register-employer',
   templateUrl: './register-employer.component.html',
-  styleUrls: ['./register-employer.component.css']
+  styleUrls: ['./register-employer.component.scss']
 })
 export class RegisterEmployerComponent implements OnInit {
   form: FormGroup;
-  employers: Employer[] = [];
-  msg = [];
+  employers: Employer[];
   editing = false;
   deleting: string;
+  countEmployers = 0;
+
+ @ViewChild('inputFind', {static: false}) inputFind: Element;
 
   constructor(
     private fb: FormBuilder,
     private employerService: EmployerService,
-    private confirmationService: ConfirmationService) { }
+    private messageService: MessageService) { }
 
   ngOnInit() {
     this.initForm();
@@ -28,8 +33,34 @@ export class RegisterEmployerComponent implements OnInit {
 
   getEmployers() {
     this.employerService.getEmployers().subscribe(resp => {
-      this.employers = resp;
+      this.mapResponse(resp);
     });
+  }
+
+  getEmployersPageable(event) {
+    const page = event.first / event.rows;
+    this.employerService.getEmployersPageable(page, event.rows).subscribe(resp => {
+      this.mapResponse(resp);
+    });
+  }
+
+  find(query) {
+    this.employerService.findEmployers(query).subscribe(resp => this.employers = resp);
+  }
+
+  verifyEmailAlreadyRegistered(event) {
+    const regex = new RegExp(Util.regexEmail);
+    const email = event.srcElement.value;
+    if (regex.test(email)) {
+      this.employerService.emailAlreadyRegistered(email)
+      .subscribe(resp => {
+        if (resp) {
+          this.form.controls['email'].setErrors({'emailAlreadyRegistered': true});
+        } else {
+          this.form.controls['email'].setErrors(null);
+        }
+      });
+    }
   }
 
   initForm() {
@@ -44,20 +75,25 @@ export class RegisterEmployerComponent implements OnInit {
   }
 
   create() {
-    this.msg = [];
     this.employerService.create(this.form.value).subscribe(
-      (emp: Employer) => {
-      this.msg.push({ severity: 'info', summary: '', detail: 'Cadastro efetuado com sucesso'});
-      this.employers.push(emp);
-      this.resetForm();
+      (resp) => {
+        this.setMessage('success', 'Cadastro efetuado com sucesso');
+        this.mapResponse(resp);
     },
     error => {
-      this.msg.push({ severity: 'danger', summary: '', detail: 'Ocorreu um erro ao criar o cadastro!'});
+      this.setMessage('error', 'Ocorreu um erro ao criar o cadastro!');
     });
+  }
+
+  mapResponse(resp: any) {
+    this.employers = resp.employers;
+    this.countEmployers = resp.count;
+    this.resetForm();
   }
 
   resetForm() {
     this.editing = false;
+    this.deleting = undefined;
     this.form.reset();
   }
 
@@ -69,38 +105,49 @@ export class RegisterEmployerComponent implements OnInit {
   update() {
     this.employerService.update(this.form.value).subscribe(
       (emp: Employer) => {
-        this.msg.push({ severity: 'info', summary: '', detail: 'Cadastro alterado com sucesso'});
+        this.setMessage('success', 'Cadastro alterado com sucesso');
         this.employers = this.employers.filter(e => e.id !== this.form.controls['id'].value);
         this.employers.push(emp);
+        this.employers = _.orderBy(this.employers, ['firstname', 'asc']);
         this.resetForm();
       },
       error => {
-        this.msg.push({ severity: 'danger', summary: '', detail: 'Ocorreu um erro ao editar cadastro!'});
+        this.setMessage('error', 'Ocorreu um erro ao editar cadastro!');
       });
   }
 
   private delete(id: string): void {
     this.employerService.delete(id).subscribe(
       resp => {
-        this.msg.push({ severity: 'danger', summary: '', detail: 'Cadastro excluído com sucesso'});
-        this.employers = this.employers.filter(emp => emp.id !== id);
+        this.setMessage('success', 'Cadastro excluído com sucesso');
+        this.mapResponse(resp);
     },
     error => {
-      this.msg.push({ severity: 'danger', summary: '', detail: 'Ocorreu um erro ao excluir cadastro!'});
+      this.setMessage('error', 'Ocorreu um erro ao excluir cadastro!');
     });
   }
 
-  showDialogDelete(id: string) {
-    this.confirmationService.confirm({
-        message: 'Tem certeza que deseja excluir este funcionário?',
-        accept: () => {
-          this.delete(id);
-        },
-        reject: () => {
-          return;
-        },
-        acceptLabel: 'Continuar',
-        rejectLabel: 'Cancelar'
-    });
+  private setMessage(severity: string, details: string) {
+    this.messageService.add({ severity: severity, summary: '', detail: details});
   }
+
+  onConfirm() {
+    this.delete(this.deleting);
+    this.messageService.clear('deleteFunc');
+  }
+
+  onReject() {
+    this.messageService.clear('deleteFunc');
+  }
+
+  clear() {
+    this.messageService.clear('deleteFunc');
+  }
+
+  showConfirm(id) {
+    this.deleting = id;
+    this.messageService.clear();
+    this.messageService.add({key: 'deleteFunc', sticky: true, severity: 'warn', summary: 'Deseja continuar?', detail: 'Então confirme!'});
+  }
+
 }

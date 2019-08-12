@@ -1,4 +1,4 @@
-import { FormControlName } from '@angular/forms';
+import { FormControlName, Form } from '@angular/forms';
 import { Component, OnInit, Input, ContentChild, AfterContentInit } from '@angular/core';
 
 @Component({

@@ -7,29 +7,39 @@ import { Employer } from '../model/Employer';
 @Injectable({providedIn: 'root'})
 export class EmployerService {
 
+  private URI = 'employers';
+
   constructor(private httpClient: HttpClient) { }
 
-  public getEmployers(): Observable<Employer[]> {
-    return this.httpClient.get<Employer[]>(`${environment.API}/employer`);
+  public getEmployers(): Observable<any> {
+    return this.httpClient.get<any>(`${environment.API}/${this.URI}`);
+  }
+
+  public getEmployersPageable(page: number, rows: number): Observable<any> {
+    return this.httpClient.get<any>(`${environment.API}/${this.URI}/employers-pageable?page=${page}&rows=${rows}`);
   }
 
   public findEmployers(query: string): Observable<Employer[]> {
-    return this.httpClient.get<Employer[]>(`${environment.API}/employer/find?query=${query}`);
+    return this.httpClient.get<Employer[]>(`${environment.API}/${this.URI}/find?query=${query}`);
+  }
+
+  public emailAlreadyRegistered(query: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${environment.API}/${this.URI}/email-already-registered?query=${query}`);
   }
 
   public getEmployer(id: string): Observable<Employer> {
-    return this.httpClient.get<Employer>(`${environment.API}/employer/${id}`);
+    return this.httpClient.get<Employer>(`${environment.API}/${this.URI}/${id}`);
   }
 
-  public create(employer: any): Observable<Employer> {
-    return this.httpClient.post<Employer>(`${environment.API}/employer`, employer);
+  public create(employer: any): Observable<any> {
+    return this.httpClient.post<any>(`${environment.API}/${this.URI}`, employer);
   }
 
   public update(employer: any): Observable<Employer> {
-    return this.httpClient.put<Employer>(`${environment.API}/employer`, employer);
+    return this.httpClient.put<Employer>(`${environment.API}/${this.URI}`, employer);
   }
 
-  public delete(id: string) {
-    return this.httpClient.delete(`${environment.API}/employer/${id}`);
+  public delete(id: string): Observable<any> {
+    return this.httpClient.delete<any>(`${environment.API}/${this.URI}/${id}`);
   }
 }

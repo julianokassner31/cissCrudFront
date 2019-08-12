@@ -1,0 +1,17 @@
+#menu > div {
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #c8c8c8;
+  font-weight: 700;
+  color: #333333;
+  background-color: #f4f4f4;
+}
+
+#menu > div:hover {
+  color:#f4f4f4;
+  background-color: #007ad9;
+}
+
+#menu > div:active {
+  text-decoration: none;
+}

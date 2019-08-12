@@ -1,14 +1,15 @@
-<div class="p-grid p-col-12 p-md-12 p-lg-6">
-  <label class="p-col-12 p-md-2 p-lg-2" [for]="label">{{label}}</label>
+<div class="p-grid p-col-6">
+  <!-- <label class="p-col-12 p-md-2 p-lg-2" [for]="label">{{label}}</label> -->
     <ng-content></ng-content>
     <ng-container *ngIf="input">
       <div *ngIf="input.invalid && (input?.dirty || input?.touched)"
-        class="p-col-12 p-md-5 p-lg-5">
-        <span *ngIf="input.errors.required">Campo obrigatório</span>
-        <span *ngIf="input.errors.minlength" >Mínimo {{input.errors.minlength.requiredLength}} caracteres requeridos</span>
-        <span *ngIf="input.errors.maxlength">Máximo {{input.errors.maxlength.requiredLength}} caracteres requeridos</span>
-        <span *ngIf="input.errors.email">Email inválido</span>
-        <span *ngIf="input.errors.pattern">Somente números</span>
+        class="p-grid p-col">
+        <p-message severity="error" *ngIf="input.errors.required" text="Campo obrigatório"></p-message>
+        <p-message severity="error" *ngIf="input.errors.minlength" text="Mínimo {{input.errors.minlength.requiredLength}} caracteres requeridos"></p-message>
+        <p-message severity="error" *ngIf="input.errors.maxlength" text="Máximo {{input.errors.maxlength.requiredLength}} caracteres requeridos"></p-message>
+        <p-message severity="error" *ngIf="input.errors.email" text="Email inválido"></p-message>
+        <p-message severity="error" *ngIf="input.errors.pattern" text="Somente números"></p-message>
+        <p-message severity="error" *ngIf="input.errors.emailAlreadyRegistered" text="Email já cadastrado"></p-message>
       </div>
     </ng-container>
 </div>
