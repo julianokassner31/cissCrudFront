@@ -20,34 +20,35 @@
       <app-input-field class="p-grid p-col-12 p-justify-center" label="NIS (PIS):">
         <input placeholder="Pis" class="p-col-12" type="text" pInputText formControlName="pis" name="pis" id="pis">
       </app-input-field>
+      <div class="p-grid p-col-6 p-justify-center">
+        <ng-container *ngIf="editing; else make">
+            <button
+            type="button"
+            pButton
+            label="Alterar"
+            [disabled]="form.invalid"
+            (click)="update()">
+          </button>
+        </ng-container>
 
-    <ng-container *ngIf="editing; else make">
-      <p-button
-        label="Alterar"
-        [disabled]="form.invalid"
-        icon="pi pi-edit"
-        iconPos="left"create
-        (onClick)="update()">
-      </p-button>
-    </ng-container>
+        <ng-template #make>
+          <button
+            type="button"
+            pButton
+            label="Cadastrar"
+            [disabled]="form.invalid"
+            (click)="create()" >
+          </button>
+        </ng-template>
 
-    <ng-template #make>
-      <p-button
-        label="Cadastrar"
-        [disabled]="form.invalid"
-        icon="pi pi-check"
-        iconPos="left"
-        (onClick)="create()" >
-      </p-button>
-    </ng-template>
-
-    <p-button
-      styleClass="ui-button-warning"
-      label="Reset"
-      icon="pi pi-reset"
-      iconPos="left"
-      (onClick)="resetForm()">
-    </p-button>
+        <button
+          type="button"
+          pButton
+          class="ui-button-warning"
+          label="Reset"
+          (click)="resetForm()">
+        </button>
+      </div>
   </div>
 </form>
 
@@ -111,10 +112,10 @@
         </div>
         <div class="ui-g ui-fluid">
             <div class="ui-g-6">
-                <button type="button" pButton (click)="onConfirm()" label="Yes" class="ui-button-success"></button>
+                <button type="button" pButton (click)="onConfirm()" label="Sim" class="ui-button-success"></button>
             </div>
             <div class="ui-g-6">
-                <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+                <button type="button" pButton (click)="onReject()" label="Não" class="ui-button-secondary"></button>
             </div>
         </div>
     </ng-template>
